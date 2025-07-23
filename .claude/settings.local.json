@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npm run dev:*)",
+      "Bash(ls:*)",
+      "Bash(npm run build:*)",
+      "Bash(rm:*)",
+      "Bash(curl:*)",
+      "Bash(convert:*)",
+      "Bash(node:*)",
+      "Bash(mv:*)",
+      "Bash(scp:*)",
+      "Bash(dir:*)",
+      "Bash(find:*)"
+    ],
+    "deny": []
+  }
+}

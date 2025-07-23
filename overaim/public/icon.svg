@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" fill="#f99e1a"/>
+  <g fill="white" stroke="white" stroke-width="4">
+    <!-- Crosshair -->
+    <line x1="96" y1="60" x2="96" y2="132" stroke-width="6"/>
+    <line x1="60" y1="96" x2="132" y2="96" stroke-width="6"/>
+    <!-- Center dot -->
+    <circle cx="96" cy="96" r="4" fill="white"/>
+  </g>
+  <text x="96" y="150" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white">OA</text>
+</svg>
