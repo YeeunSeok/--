@@ -1,9 +1,11 @@
+@import url('./styles/blizzard-theme.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: 'Futura', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Exo 2', 'Futura', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   font-synthesis: none;
@@ -16,7 +18,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #1e1e1e 0%, #2c2c2c 100%);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1e1e1e 100%);
   color: white;
   overflow-x: hidden;
   overflow-y: auto;
@@ -24,4 +26,9 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Hide cursor in game mode */
+.cursor-none {
+  cursor: none !important;
 }
