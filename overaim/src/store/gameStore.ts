@@ -5,6 +5,7 @@ import { heroes } from '../data/heroes';
 interface GameStore extends GameState {
   settings: GameSettings;
   stats: UserStats;
+  accuracy: number;
   
   // Actions
   setMode: (mode: TrainingMode) => void;
@@ -18,6 +19,9 @@ interface GameStore extends GameState {
   saveSession: (session: TrainingSession) => void;
   loadStats: () => void;
   resetStats: () => void;
+  addScore: (points: number) => void;
+  incrementStreak: () => void;
+  resetStreak: () => void;
 }
 
 const defaultSettings: GameSettings = {
@@ -51,6 +55,7 @@ export const useGameStore = create<GameStore>((set) => ({
   shots: [],
   timeRemaining: 0,
   streak: 0,
+  accuracy: 0,
   settings: defaultSettings,
   stats: defaultStats,
 
@@ -127,17 +132,31 @@ export const useGameStore = create<GameStore>((set) => ({
   }),
   
   loadStats: () => {
-    const savedSettings = localStorage.getItem('overaim-settings');
-    const savedStats = localStorage.getItem('overaim-stats');
-    
-    if (savedSettings) {
-      const settings = JSON.parse(savedSettings);
-      set({ settings: { ...defaultSettings, ...settings } });
-    }
-    
-    if (savedStats) {
-      const stats = JSON.parse(savedStats);
-      set({ stats: { ...defaultStats, ...stats } });
+    try {
+      const savedSettings = localStorage.getItem('overaim-settings');
+      const savedStats = localStorage.getItem('overaim-stats');
+      
+      if (savedSettings) {
+        try {
+          const settings = JSON.parse(savedSettings);
+          set({ settings: { ...defaultSettings, ...settings } });
+        } catch (error) {
+          console.warn('Failed to parse saved settings:', error);
+          localStorage.removeItem('overaim-settings');
+        }
+      }
+      
+      if (savedStats) {
+        try {
+          const stats = JSON.parse(savedStats);
+          set({ stats: { ...defaultStats, ...stats } });
+        } catch (error) {
+          console.warn('Failed to parse saved stats:', error);
+          localStorage.removeItem('overaim-stats');
+        }
+      }
+    } catch (error) {
+      console.error('Error accessing localStorage:', error);
     }
   },
   
@@ -145,4 +164,14 @@ export const useGameStore = create<GameStore>((set) => ({
     localStorage.removeItem('overaim-stats');
     set({ stats: defaultStats });
   },
+
+  addScore: (points) => set((state) => ({ 
+    score: state.score + points 
+  })),
+
+  incrementStreak: () => set((state) => ({ 
+    streak: state.streak + 1 
+  })),
+
+  resetStreak: () => set({ streak: 0 }),
 }));

@@ -20,10 +20,15 @@ const BlizzardApp: React.FC = () => {
   useEffect(() => {
     // 초기 로딩
     const initApp = async () => {
-      await loadStats();
-      setTimeout(() => {
-        setGameState('menu');
-      }, 2000);
+      try {
+        await loadStats();
+        setTimeout(() => {
+          setGameState('menu');
+        }, 2000);
+      } catch (error) {
+        console.error('Failed to load stats:', error);
+        setGameState('menu'); // 에러가 나도 메뉴로 이동
+      }
     };
     
     initApp();
@@ -106,13 +111,6 @@ const BlizzardApp: React.FC = () => {
           ))}
         </div>
       </div>
-      
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
-          50% { transform: translateY(-20px) rotate(180deg); opacity: 0.6; }
-        }
-      `}</style>
     </div>
   );
 };

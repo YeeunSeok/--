@@ -30,7 +30,7 @@ interface HitEffect {
 
 const BlizzardGameCanvas: React.FC<BlizzardGameCanvasProps> = ({ onNavigate }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(0);
   const mouseRef = useRef({ x: 0, y: 0 });
   const lastShotTime = useRef(0);
   
@@ -42,7 +42,6 @@ const BlizzardGameCanvas: React.FC<BlizzardGameCanvasProps> = ({ onNavigate }) =
     score, 
     streak, 
     timeRemaining,
-    accuracy,
     addScore,
     incrementStreak,
     resetStreak,
@@ -74,38 +73,59 @@ const BlizzardGameCanvas: React.FC<BlizzardGameCanvasProps> = ({ onNavigate }) =
 
   // Generate new target
   const generateTarget = useCallback(() => {
-    const params = getGameParams();
-    const targetTypes = ['normal', 'normal', 'normal', 'critical', 'bonus'] as const;
-    const type = targetTypes[Math.floor(Math.random() * targetTypes.length)];
-    
-    let size = params.targetSize;
-    let health = 1;
-    
-    if (type === 'critical') {
-      size *= 0.7; // Smaller
-      health = 1;
-    } else if (type === 'bonus') {
-      size *= 1.3; // Larger
-      health = 2;
-    }
+    try {
+      const params = getGameParams();
+      const targetTypes = ['normal', 'normal', 'normal', 'critical', 'bonus'] as const;
+      const type = targetTypes[Math.floor(Math.random() * targetTypes.length)];
+      
+      let size = params.targetSize;
+      let health = 1;
+      
+      if (type === 'critical') {
+        size *= 0.7; // Smaller
+        health = 1;
+      } else if (type === 'bonus') {
+        size *= 1.3; // Larger
+        health = 2;
+      }
 
-    return {
-      id: Math.random().toString(36),
-      x: size + Math.random() * (CANVAS_WIDTH - size * 2),
-      y: size + Math.random() * (CANVAS_HEIGHT - size * 2),
-      size,
-      speed: params.targetSpeed + Math.random() * 2,
-      direction: {
-        x: (Math.random() - 0.5) * 2,
-        y: (Math.random() - 0.5) * 2
-      },
-      health,
-      maxHealth: health,
-      type,
-      createdAt: Date.now(),
-      isHit: false
-    };
-  }, [currentMode]);
+      // Ensure minimum size
+      size = Math.max(size, 10);
+
+      return {
+        id: Math.random().toString(36),
+        x: Math.max(size, Math.min(CANVAS_WIDTH - size, size + Math.random() * (CANVAS_WIDTH - size * 2))),
+        y: Math.max(size, Math.min(CANVAS_HEIGHT - size, size + Math.random() * (CANVAS_HEIGHT - size * 2))),
+        size,
+        speed: Math.max(0, params.targetSpeed + Math.random() * 2),
+        direction: {
+          x: (Math.random() - 0.5) * 2,
+          y: (Math.random() - 0.5) * 2
+        },
+        health,
+        maxHealth: health,
+        type,
+        createdAt: Date.now(),
+        isHit: false
+      };
+    } catch (error) {
+      console.error('Error generating target:', error);
+      // Return a safe default target
+      return {
+        id: Math.random().toString(36),
+        x: CANVAS_WIDTH / 2,
+        y: CANVAS_HEIGHT / 2,
+        size: 50,
+        speed: 0,
+        direction: { x: 0, y: 0 },
+        health: 1,
+        maxHealth: 1,
+        type: 'normal' as const,
+        createdAt: Date.now(),
+        isHit: false
+      };
+    }
+  }, [getGameParams]);
 
   // Initialize targets
   useEffect(() => {

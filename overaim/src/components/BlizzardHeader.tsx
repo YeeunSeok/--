@@ -7,7 +7,7 @@ interface BlizzardHeaderProps {
 }
 
 const BlizzardHeader: React.FC<BlizzardHeaderProps> = ({ currentState, onNavigate }) => {
-  const { score, timeRemaining, isPlaying, streak, accuracy } = useGameStore();
+  const { score, timeRemaining, isPlaying, streak } = useGameStore();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
